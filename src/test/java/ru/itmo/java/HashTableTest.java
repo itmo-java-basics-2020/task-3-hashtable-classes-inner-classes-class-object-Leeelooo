@@ -24,6 +24,39 @@ public class HashTableTest {
     public void init() {
         controlInstance = new HashMap<>();
     }
+    
+    @Test(timeout = 15000)
+    public void InfinityLoop(){
+        HashTable hashTable = new HashTable(10);
+        for (int i = 0; i < 1000000; i++){
+            FunnyInt in = new FunnyInt(i);
+            hashTable.put(in, in);
+            hashTable.remove(in);
+        }
+        hashTable.get(new FunnyInt(1000000));
+    }
+
+    private class FunnyInt {
+
+        FunnyInt(int num){ 
+            this.num = num;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FunnyInt aFunnyInt = (FunnyInt) o;
+            return num == aFunnyInt.num;
+        }
+
+        @Override
+        public int hashCode() {
+            return num;
+        }
+
+        private int num;
+    }
 
     @Test
     public void putMostly_fewKeys() {
